@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Um convite pra você 💌</title>
+<meta name="theme-color" content="#0b0710" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* =================================================================
+   PALETA — noite de vinho e velas
+   ================================================================= */
+:root{
+  --noite:#0b0710;        /* quase preto        */
+  --noite-2:#170c18;      /* vinho muito escuro */
+  --vinho:#2e0d20;        /* vinho              */
+  --bordo:#6e1636;        /* bordô              */
+  --rosa:#e8557a;         /* rosa intenso       */
+  --rosa-claro:#f59ab3;   /* blush              */
+  --ouro:#e9c58f;         /* luz de vela        */
+  --creme:#fbf1f3;
+  --creme-suave:#e9d7dd;
+
+  --script:'Parisienne', cursive;
+  --serif:'Cormorant Garamond', serif;
+  --sans:'Montserrat', sans-serif;
+}
+*{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html,body{ min-height:100%; }
+body{
+  font-family:var(--serif); color:var(--creme);
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(110,22,54,.55) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 110%, rgba(46,13,32,.9) 0%, transparent 60%),
+    var(--noite);
+  background-attachment:fixed;
+  overflow-x:hidden;
+}
+
+#estrelas{ position:fixed; inset:0; z-index:0; pointer-events:none; }
+#coracoes{ position:fixed; inset:0; z-index:3; pointer-events:none; overflow:hidden; }
+
+/* ---------- etapas (uma tela de cada vez) ---------- */
+.etapa{
+  position:relative; z-index:10;
+  min-height:100vh; min-height:100svh;
+  display:none; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:48px 16px;
+  max-width:640px; margin:0 auto;
+}
+.etapa.ativa{ display:flex; animation:surgir 1.1s ease both; }
+@keyframes surgir{ from{ opacity:0; transform:translateY(24px);} to{ opacity:1; transform:none;} }
+
+.eyebrow{
+  font-family:var(--sans); font-weight:300; letter-spacing:4px; text-transform:uppercase;
+  font-size:11px; color:var(--rosa-claro); opacity:.85; margin-bottom:12px;
+}
+.script{
+  font-family:var(--script); color:var(--creme);
+  text-shadow:0 0 28px rgba(232,85,122,.45); line-height:1.05;
+}
+.texto{
+  font-size:clamp(18px,4.8vw,22px); font-style:italic; line-height:1.75;
+  color:var(--creme-suave); max-width:520px;
+}
+.texto p{ margin-bottom:14px; opacity:0; animation:surgir 1s ease forwards; }
+
+/* ---------- botões ---------- */
+.botao{
+  font-family:var(--sans); font-weight:500; letter-spacing:2px; text-transform:uppercase;
+  font-size:13px; color:var(--noite);
+  background:linear-gradient(135deg,var(--ouro) 0%,var(--rosa-claro) 100%);
+  border:none; border-radius:50px; padding:16px 36px; cursor:pointer;
+  box-shadow:0 10px 36px rgba(232,85,122,.4);
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.botao:hover{ transform:translateY(-3px); box-shadow:0 14px 44px rgba(232,85,122,.6); }
+.botao:active{ transform:scale(.97); }
+.botao.fantasma{
+  background:transparent; color:var(--rosa-claro);
+  border:1px solid rgba(245,154,179,.45); box-shadow:none;
+}
+.respirar{ animation:respirar 2.6s ease-in-out infinite; }
+@keyframes respirar{
+  0%,100%{ box-shadow:0 10px 36px rgba(232,85,122,.35), 0 0 0 0 rgba(245,154,179,.5); }
+  50%    { box-shadow:0 14px 48px rgba(232,85,122,.6),  0 0 0 20px rgba(245,154,179,0); }
+}
+
+/* ---------- ETAPA 1: envelope ---------- */
+.envelope{
+  position:relative; width:min(300px,78vw); aspect-ratio:3/2; margin:26px 0 34px;
+  cursor:pointer; filter:drop-shadow(0 22px 40px rgba(0,0,0,.6));
+  animation:flutuar 4s ease-in-out infinite;
+}
+@keyframes flutuar{ 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-8px);} }
+.envelope .corpo{
+  position:absolute; inset:0; border-radius:10px;
+  background:linear-gradient(160deg,var(--bordo),var(--vinho));
+  border:1px solid rgba(233,197,143,.25);
+}
+.envelope .aba{
+  position:absolute; left:0; right:0; top:0; height:58%;
+  background:linear-gradient(180deg,#83203f,#5a1230);
+  clip-path:polygon(0 0,100% 0,50% 100%);
+  transform-origin:top; transition:transform .8s ease;
+  border-radius:10px 10px 0 0; z-index:2;
+}
+.envelope .selo{
+  position:absolute; left:50%; top:58%; transform:translate(-50%,-50%);
+  width:56px; height:56px; border-radius:50%; z-index:3;
+  background:radial-gradient(circle at 35% 35%,#ff7aa0,#b0244f);
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px; color:var(--creme); box-shadow:0 4px 14px rgba(0,0,0,.5);
+  animation:pulsar 2.2s ease-in-out infinite; transition:opacity .4s;
+}
+@keyframes pulsar{ 0%,100%{ transform:translate(-50%,-50%) scale(1);} 50%{ transform:translate(-50%,-50%) scale(1.12);} }
+.envelope.aberto .aba{ transform:rotateX(180deg); }
+.envelope.aberto .selo{ opacity:0; }
+
+/* ---------- ETAPA 2: lembranças ---------- */
+.fita{
+  display:flex; gap:18px; justify-content:center; flex-wrap:wrap; margin:24px 0 30px;
+}
+.polaroid{
+  background:#fbf6ef; padding:8px 8px 0; border-radius:3px; width:min(132px,38vw);
+  box-shadow:0 14px 30px rgba(0,0,0,.55);
+  transform:rotate(var(--giro,-4deg)); opacity:0;
+  animation:cair .9s ease forwards;
+}
+.polaroid:nth-child(2){ --giro:3deg; }
+.polaroid:nth-child(3){ --giro:-2deg; }
+.polaroid:nth-child(4){ --giro:4deg; }
+@keyframes cair{
+  from{ opacity:0; transform:translateY(-30px) rotate(0); }
+  to  { opacity:1; transform:rotate(var(--giro,-4deg)); }
+}
+.polaroid img{ width:100%; aspect-ratio:1/1; object-fit:cover; display:block; filter:sepia(.18) saturate(.9); }
+.polaroid .leg{ font-family:var(--script); color:#3a2430; font-size:17px; padding:6px 2px 8px; }
+
+/* ---------- ETAPA 3: o convite ---------- */
+.cartao{
+  width:100%; background:rgba(255,255,255,.04);
+  border:1px solid rgba(233,197,143,.22); border-radius:24px;
+  padding:34px 22px; backdrop-filter:blur(8px);
+  box-shadow:0 30px 70px rgba(0,0,0,.45), inset 0 0 60px rgba(110,22,54,.25);
+}
+.data{
+  display:inline-flex; align-items:center; gap:14px; margin:18px 0 6px;
+}
+.data .dia{ font-family:var(--serif); font-weight:600; font-variant-numeric:lining-nums; font-size:clamp(56px,18vw,84px); line-height:1; color:var(--ouro); text-shadow:0 0 30px rgba(233,197,143,.35); }
+.data .info{ text-align:left; font-family:var(--sans); font-weight:300; letter-spacing:2px; text-transform:uppercase; font-size:12px; color:var(--creme-suave); line-height:1.7; }
+.data .info b{ font-weight:500; color:var(--rosa-claro); }
+
+.programa{ display:flex; flex-direction:column; gap:14px; margin:26px 0 8px; text-align:left; }
+.item{
+  display:flex; gap:14px; align-items:center;
+  background:rgba(46,13,32,.55); border:1px solid rgba(245,154,179,.15);
+  border-radius:16px; padding:14px 16px;
+}
+.item .ico{ font-size:28px; flex-shrink:0; width:40px; text-align:center; }
+.item .tit{ font-family:var(--script); font-size:28px; color:var(--rosa-claro); line-height:1.1; }
+.item .desc{ font-size:16px; font-style:italic; color:var(--creme-suave); line-height:1.45; }
+.e-depois{ font-family:var(--sans); font-weight:300; font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--ouro); opacity:.7; text-align:center; }
+
+.contagem{ margin-top:22px; font-family:var(--sans); font-weight:300; font-size:12px; letter-spacing:1.5px; color:var(--creme-suave); opacity:.75; }
+.contagem b{ color:var(--ouro); font-weight:500; }
+
+/* ---------- ETAPA 4: a pergunta ---------- */
+.pergunta{ font-size:clamp(46px,14vw,74px); margin:8px 0 34px; }
+.respostas{ display:flex; flex-direction:column; gap:14px; width:min(320px,100%); }
+.respostas .botao{ width:100%; }
+.respostas .r1{ font-size:13px; padding:15px 20px; }
+.respostas .r2{ font-size:14px; padding:17px 20px; }
+.respostas .r3{ font-size:16px; padding:20px 20px; }
+
+/* ---------- ETAPA 5: celebração ---------- */
+.coracao-grande{ font-size:84px; animation:batida 1.2s ease-in-out infinite; margin-bottom:10px; }
+@keyframes batida{ 0%,100%{ transform:scale(1);} 15%{ transform:scale(1.18);} 30%{ transform:scale(1);} 45%{ transform:scale(1.12);} }
+.resposta-dela{
+  display:inline-block; margin:14px 0 22px; padding:8px 18px; border-radius:50px;
+  font-family:var(--sans); font-size:12px; letter-spacing:2px; text-transform:uppercase;
+  color:var(--ouro); border:1px solid rgba(233,197,143,.35);
+}
+.lembrete{ margin-top:26px; font-family:var(--sans); font-weight:300; font-size:12px; letter-spacing:1px; color:var(--creme-suave); opacity:.7; line-height:1.8; }
+.acoes{ display:flex; flex-direction:column; gap:12px; margin-top:26px; width:min(320px,100%); }
+
+/* música */
+#som{
+  position:fixed; bottom:16px; right:16px; z-index:25;
+  width:44px; height:44px; border-radius:50%; border:1px solid rgba(245,154,179,.4);
+  background:rgba(11,7,16,.75); color:var(--rosa-claro); font-size:17px;
+  cursor:pointer; backdrop-filter:blur(6px); display:none;
+  align-items:center; justify-content:center;
+}
+#som.aparece{ display:flex; }
+
+.rodape{ position:relative; z-index:10; text-align:center; padding:0 16px 28px; font-family:var(--sans); font-weight:300; font-size:10px; letter-spacing:2px; color:var(--creme-suave); opacity:.35; }
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="estrelas"></canvas>
+<div id="coracoes"></div>
+
+<!-- ETAPA 1 — envelope -->
+<section class="etapa ativa" id="e1">
+  <div class="eyebrow">chegou uma carta pra</div>
+  <div class="script" style="font-size:clamp(52px,17vw,88px)" id="nomeAbertura">Pollyana</div>
+  <div class="envelope" id="envelope" role="button" aria-label="Abrir o envelope">
+    <div class="corpo"></div>
+    <div class="aba"></div>
+    <div class="selo">❤</div>
+  </div>
+  <button class="botao respirar" id="abrir">Abrir com carinho</button>
+</section>
+
+<!-- ETAPA 2 — lembranças -->
+<section class="etapa" id="e2">
+  <div class="eyebrow">antes de tudo…</div>
+  <div class="script" style="font-size:clamp(40px,12vw,62px)">Lembra da gente?</div>
+  <div class="fita" id="fita"></div>
+  <div class="texto" id="textoSaudade"></div>
+  <button class="botao fantasma" id="paraConvite" style="margin-top:18px">Continuar ❤</button>
+</section>
+
+<!-- ETAPA 3 — o convite -->
+<section class="etapa" id="e3">
+  <div class="cartao">
+    <div class="eyebrow">um convite especial</div>
+    <div class="script" style="font-size:clamp(38px,11vw,58px)">Uma noite diferente</div>
+
+    <div class="data">
+      <div class="dia" id="cDia">10</div>
+      <div class="info"><b id="cSemana">sábado</b><br><span id="cMes">outubro</span><br><span id="cHora">à noite</span></div>
+    </div>
+
+    <div class="programa">
+      <div class="item">
+        <div class="ico">🍷</div>
+        <div>
+          <div class="tit">Jantar a dois</div>
+          <div class="desc" id="descJantar"></div>
+        </div>
+      </div>
+      <div class="e-depois">e depois…</div>
+      <div class="item">
+        <div class="ico">🌙</div>
+        <div>
+          <div class="tit">Caminhada sob as estrelas</div>
+          <div class="desc" id="descCaminhada"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contagem" id="contagem"></div>
+  </div>
+  <button class="botao respirar" id="paraPergunta" style="margin-top:30px">Tenho uma pergunta ❤</button>
+</section>
+
+<!-- ETAPA 4 — a pergunta -->
+<section class="etapa" id="e4">
+  <div class="eyebrow" id="perguntaEyebrow">pollyana,</div>
+  <div class="script pergunta">Você aceita sair comigo?</div>
+  <div class="respostas">
+    <button class="botao r1" data-resposta="Sim">Sim</button>
+    <button class="botao r2" data-resposta="Sim, com certeza">Sim, com certeza</button>
+    <button class="botao r3 respirar" data-resposta="Totalmente">Totalmente 💘</button>
+  </div>
+</section>
+
+<!-- ETAPA 5 — celebração -->
+<section class="etapa" id="e5">
+  <div class="coracao-grande">💖</div>
+  <div class="script" style="font-size:clamp(44px,13vw,70px)" id="tituloFinal">Combinado!</div>
+  <div class="resposta-dela" id="respostaDela"></div>
+  <div class="texto" id="textoFinal"></div>
+  <div class="lembrete" id="lembrete"></div>
+  <div class="acoes" id="acoes"></div>
+</section>
+
+<div class="rodape">feito com amor · <span id="assinRodape">valdo</span></div>
+<button id="som" title="Música" aria-label="Tocar ou pausar música">♪</button>
+
+<script>
+/* =================================================================
+   ⚙️  CONFIGURAÇÃO — edite só esta parte
+   ================================================================= */
+const CONFIG = {
+  nomeDela : "Pollyana",
+  nomeDele : "Valdo",
+
+  // Data e horário do encontro (ANO-MÊS-DIA e HH:MM). Usado no cartão e na contagem regressiva.
+  data    : "2026-10-10",
+  horario : "19:30",
+
+  descJantar    : "Uma mesa só nossa, conversa sem pressa e aquele brinde a tudo que a gente já viveu.",
+  descCaminhada : "De mãos dadas, sem destino certo — só nós dois, a noite e o céu.",
+
+  // Texto saudoso (cada item vira um parágrafo)
+  saudade : [
+    "Às vezes eu me pego relembrando cada pedacinho da gente: o começo meio tímido, o seu sorriso, as conversas que não queriam acabar.",
+    "Tenho saudade até do que ainda nem vivemos — e é por isso que quero criar uma memória nova com você.",
+  ],
+
+  fotos : [
+    { src:"Nossocomeco.jpeg",   legenda:"o começo" },
+    { src:"Aquelesorriso.jpeg", legenda:"aquele sorriso" },
+    { src:"nosdois.jpeg",       legenda:"nós dois" },
+    { src:"parasempre.jpeg",    legenda:"pra sempre" },
+  ],
+
+  // Resposta de cada botão
+  finais : {
+    "Sim"              : { titulo:"Eu sabia!",          texto:"Então está combinado: amanhã a noite é nossa. Prepara o coração (e um sapato confortável pra caminhada)." },
+    "Sim, com certeza" : { titulo:"Com certeza, amor!", texto:"Com certeza também é a minha resposta pra você — hoje, amanhã e em todos os outros dias." },
+    "Totalmente"       : { titulo:"Totalmente seu",     texto:"Essa noite vai ser totalmente nossa — e eu, totalmente seu. Mal posso esperar." },
+  },
+
+  // Opcional: seu WhatsApp com DDI+DDD, só números (ex.: "5585999999999").
+  // Se preencher, aparece um botão para ela te mandar a resposta.
+  whatsapp : "",
+
+  musica : "reginaldo.mp3",   // "" para sem música
+};
+
+/* =================================================================
+   A partir daqui não precisa mexer.
+   ================================================================= */
+const $ = id => document.getElementById(id);
+
+/* ---------- textos ---------- */
+$('nomeAbertura').textContent = CONFIG.nomeDela;
+$('perguntaEyebrow').textContent = CONFIG.nomeDela.toLowerCase() + ",";
+$('assinRodape').textContent = CONFIG.nomeDele.toLowerCase();
+$('descJantar').textContent = CONFIG.descJantar;
+$('descCaminhada').textContent = CONFIG.descCaminhada;
+
+const encontro = new Date(`${CONFIG.data}T${CONFIG.horario || "19:00"}:00`);
+const meses = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+const semana = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+$('cDia').textContent = String(encontro.getDate()).padStart(2,"0");
+$('cSemana').textContent = semana[encontro.getDay()];
+$('cMes').textContent = meses[encontro.getMonth()];
+$('cHora').textContent = CONFIG.horario ? "às " + CONFIG.horario.replace(":", "h") : "à noite";
+
+CONFIG.fotos.forEach((f,i)=>{
+  const p = document.createElement('div');
+  p.className = 'polaroid'; p.style.animationDelay = (0.25 + i*0.25) + 's';
+  const img = document.createElement('img'); img.src = f.src; img.alt = f.legenda; img.loading = 'lazy';
+  img.onerror = () => p.remove();
+  const leg = document.createElement('div'); leg.className = 'leg'; leg.textContent = f.legenda;
+  p.append(img, leg); $('fita').appendChild(p);
+});
+CONFIG.saudade.forEach((t,i)=>{
+  const p = document.createElement('p'); p.textContent = t;
+  p.style.animationDelay = (1.4 + i*0.9) + 's'; $('textoSaudade').appendChild(p);
+});
+
+/* ---------- contagem regressiva ---------- */
+function contar(){
+  let d = encontro - new Date();
+  if(d <= 0){ $('contagem').innerHTML = "<b>é hoje!</b> 💫"; return; }
+  const h = Math.floor(d/3600000); d -= h*3600000;
+  const m = Math.floor(d/60000);   d -= m*60000;
+  const s = Math.floor(d/1000);
+  $('contagem').innerHTML = `faltam <b>${h}h ${String(m).padStart(2,"0")}min ${String(s).padStart(2,"0")}s</b> pra nossa noite`;
+}
+contar(); setInterval(contar, 1000);
+
+/* ---------- navegação entre etapas ---------- */
+function irPara(id){
+  document.querySelectorAll('.etapa').forEach(e => e.classList.remove('ativa'));
+  $(id).classList.add('ativa');
+  scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* ---------- céu estrelado ---------- */
+const cv = $('estrelas'), cx = cv.getContext('2d');
+let estrelas = [];
+function montar(){
+  cv.width = innerWidth; cv.height = innerHeight;
+  estrelas = Array.from({ length: Math.min(160, Math.floor(innerWidth*innerHeight/8000)) }, () => ({
+    x:Math.random()*cv.width, y:Math.random()*cv.height,
+    r:Math.random()*1.3+.3, b:Math.random()*6, v:Math.random()*.02+.004
+  }));
+}
+(function pintar(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  estrelas.forEach(s => {
+    s.b += s.v;
+    cx.beginPath(); cx.arc(s.x,s.y,s.r,0,7);
+    cx.fillStyle = `rgba(255,236,226,${.25 + Math.abs(Math.sin(s.b))*.6})`; cx.fill();
+  });
+  requestAnimationFrame(pintar);
+})();
+montar(); addEventListener('resize', montar);
+
+/* ---------- corações ---------- */
+const camada = $('coracoes');
+const tipos = ['❤','💕','💗','💖','♥'];
+function coracaoSubindo(){
+  const el = document.createElement('div');
+  el.textContent = tipos[Math.floor(Math.random()*tipos.length)];
+  const op = .25 + Math.random()*.45;
+  el.style.cssText = `position:absolute; left:${Math.random()*100}vw; bottom:-40px;
+    font-size:${12+Math.random()*22}px; color:#e8557a; opacity:${op};`;
+  camada.appendChild(el);
+  el.animate([
+    { transform:'translate(0,0) rotate(0)', opacity:op },
+    { transform:`translate(${(Math.random()*2-1)*100}px,-${innerHeight+80}px) rotate(${(Math.random()*2-1)*40}deg)`, opacity:0 }
+  ], { duration:7000+Math.random()*6000, easing:'ease-out' }).onfinish = () => el.remove();
+}
+let ritmo = setInterval(coracaoSubindo, 1100);
+
+function explosaoDeCoracoes(x, y, n=36){
+  for(let i=0;i<n;i++){
+    const el = document.createElement('div');
+    el.textContent = tipos[Math.floor(Math.random()*tipos.length)];
+    el.style.cssText = `position:fixed; left:${x}px; top:${y}px; z-index:20; pointer-events:none;
+      font-size:${14+Math.random()*22}px; color:#e8557a;`;
+    document.body.appendChild(el);
+    const ang = Math.random()*Math.PI*2, dist = 80 + Math.random()*Math.min(innerWidth,420)*.6;
+    el.animate([
+      { transform:'translate(-50%,-50%) scale(.3)', opacity:1 },
+      { transform:`translate(calc(-50% + ${Math.cos(ang)*dist}px), calc(-50% + ${Math.sin(ang)*dist + 60}px)) scale(1.1) rotate(${(Math.random()*2-1)*90}deg)`, opacity:0 }
+    ], { duration:1400+Math.random()*900, easing:'cubic-bezier(.15,.7,.3,1)' }).onfinish = () => el.remove();
+  }
+}
+
+addEventListener('pointerdown', e => {
+  if(e.target.closest('button, .envelope, a')) return;
+  explosaoDeCoracoes(e.clientX, e.clientY, 6);
+});
+
+/* ---------- som ---------- */
+let audio = null, tocando = false;
+const botaoSom = $('som');
+if(CONFIG.musica){ audio = new Audio(CONFIG.musica); audio.loop = true; audio.volume = .45; }
+botaoSom.addEventListener('click', () => {
+  if(!audio) return;
+  if(tocando){ audio.pause(); botaoSom.textContent = '♪'; }
+  else { audio.play().catch(()=>{}); botaoSom.textContent = '❚❚'; }
+  tocando = !tocando;
+});
+function tilim(){
+  try{
+    const ac = new (window.AudioContext||window.webkitAudioContext)();
+    [523.25,659.25,783.99,1046.5].forEach((f,i) => {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'sine'; o.frequency.value = f; o.connect(g); g.connect(ac.destination);
+      const t = ac.currentTime + i*.12;
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.16,t+.02);
+      g.gain.exponentialRampToValueAtTime(.001,t+.6);
+      o.start(t); o.stop(t+.65);
+    });
+  }catch(e){}
+}
+
+/* ---------- fluxo ---------- */
+function abrir(){
+  const env = $('envelope');
+  if(env.classList.contains('aberto')) return;
+  env.classList.add('aberto'); tilim();
+  const r = env.getBoundingClientRect();
+  explosaoDeCoracoes(r.left + r.width/2, r.top + r.height/2, 28);
+  if(audio){ botaoSom.classList.add('aparece'); audio.play().then(()=>{ tocando = true; botaoSom.textContent = '❚❚'; }).catch(()=>{}); }
+  setTimeout(() => irPara('e2'), 1100);
+}
+$('abrir').addEventListener('click', abrir);
+$('envelope').addEventListener('click', abrir);
+$('paraConvite').addEventListener('click', () => irPara('e3'));
+$('paraPergunta').addEventListener('click', () => irPara('e4'));
+
+document.querySelectorAll('[data-resposta]').forEach(b => b.addEventListener('click', e => {
+  const resp = b.dataset.resposta;
+  const fim = CONFIG.finais[resp];
+  tilim();
+  explosaoDeCoracoes(e.clientX || innerWidth/2, e.clientY || innerHeight/2, 50);
+
+  $('tituloFinal').textContent = fim.titulo;
+  $('respostaDela').textContent = "sua resposta: " + resp;
+  $('textoFinal').innerHTML = "";
+  const p = document.createElement('p'); p.textContent = fim.texto; p.style.animationDelay = '.5s';
+  $('textoFinal').appendChild(p);
+  $('lembrete').innerHTML = `${$('cSemana').textContent}, ${$('cDia').textContent} de ${$('cMes').textContent} · ${$('cHora').textContent}<br>🍷 jantar &nbsp;·&nbsp; 🌙 caminhada`;
+
+  const acoes = $('acoes'); acoes.innerHTML = "";
+  if(CONFIG.whatsapp){
+    const a = document.createElement('a');
+    a.className = 'botao'; a.style.textDecoration = 'none';
+    a.textContent = 'Contar pro ' + CONFIG.nomeDele + ' 💬';
+    a.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(`${resp}! 💖 Topo nosso jantar + caminhada amanhã à noite.`)}`;
+    a.target = '_blank'; a.rel = 'noopener';
+    acoes.appendChild(a);
+  }
+  const de = document.createElement('button');
+  de.className = 'botao fantasma'; de.textContent = 'Ver o convite de novo';
+  de.onclick = () => irPara('e3');
+  acoes.appendChild(de);
+
+  clearInterval(ritmo); ritmo = setInterval(coracaoSubindo, 280);
+  irPara('e5');
+  setTimeout(() => explosaoDeCoracoes(innerWidth/2, innerHeight*.3, 40), 700);
+}));
+</script>
+</body>
+</html>
